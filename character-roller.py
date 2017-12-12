@@ -35,5 +35,11 @@ class Character():
         return sum(self.attribute)
 
 new_character = Character()
-for attribute in new_character.attributes:
-    print "%s = %d" % ( attribute, new_character.attributes[attribute] )
+
+attr_out = "{:>13} => {:>2}"
+print attr_out.format( "strength".title(), new_character.attributes['strength'])
+print attr_out.format( "intelligence".title() , new_character.attributes['intelligence'])
+print attr_out.format( "wisdom".title() , new_character.attributes['wisdom'])
+print attr_out.format( "dexterity".title() , new_character.attributes['dexterity'])
+print attr_out.format( "constitution".title() , new_character.attributes['constitution'])
+print attr_out.format( "charisma".title() , new_character.attributes['charisma'])
