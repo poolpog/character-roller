@@ -10,14 +10,14 @@ parser.add_argument("-c", "--class",
                         default="fighter",
                         dest="character_class"
                         )
-parser.add_argument("--min-attribute-value",
+parser.add_argument("-m", "--min-attribute-value",
                         help="Minimum primary attribute value for character class. Defaults to '15'",
                         action="store",
                         type=int,
                         default=15,
                         dest="min_attribute_value"
                         )
-parser.add_argument("--2up",
+parser.add_argument("-2", "--2up",
                         help="Format for 2 per page, landscape",
                         action="store_true",
                         default=False,
