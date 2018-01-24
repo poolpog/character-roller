@@ -278,8 +278,10 @@ def main():
     print "|                                              |                   |".format()
     if character_class in ('wizard','cleric'):
         print "|-- Spells ------------------------------------|                   |".format()
+    elif character_class in ('thief'):
+        print "|-- Notes -------------------------------------|                   |".format()
     else:
-        print "|-- Notes ------------------------------------|                   |".format()
+        print "|                                              |                   |".format()
     print "|                                              |                   |".format()
     print "|                                              |                   |".format()
     print "|                                              |                   |".format()
