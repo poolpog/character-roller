@@ -3,6 +3,7 @@
 from random import *
 import argparse
 
+# == Init == #
 parser = argparse.ArgumentParser()  
 parser.add_argument("-c", "--class",
                         help="Character class. One of: fighter, thief, wizard, cleric. Defaults to 'fighter'",
@@ -23,15 +24,39 @@ parser.add_argument("-2", "--2up",
                         default=False,
                         dest="_2up"
                         )
+parser.add_argument("-r", "--random",
+                        help="Roll a random class",
+                        action="store_true",
+                        default=False,
+                        dest="random_class"
+                        )
+parser.add_argument("-d", "--dice",
+                        help="Number of dice to roll to get stats; will pick best 3",
+                        action="store",
+                        default=4,
+                        type=int,
+                        dest="dice"
+                        )
 args = parser.parse_args()  
 character_class = args.character_class
 min_attribute_value = args.min_attribute_value
 _2up = args._2up
+random_class = args.random_class
+dice = args.dice if args.dice >= 3 else 3
+allowed_classes = ( "fighter", "thief", "wizard", "cleric" )
 
-if character_class not in ( "fighter", "thief", "wizard", "cleric" ):
+if character_class not in allowed_classes:
     args = parser.parse_args(['-h'])  
     exit()
 
+if random_class:
+    from random import *
+    pick = randint( 0, 3 )
+    character_class = allowed_classes[pick]
+
+# == End Init == #
+
+# == Class Defs == #
 class Character():
     attributes = ""
     global min_attribute_value
@@ -97,13 +122,11 @@ class Attribute():
         self.roll()
 
     def roll(self):
-        rolls = [
-            randint(1,6),
-            randint(1,6),
-            randint(1,6),
-            randint(1,6)
-            ]
-        for i in range(0,1):
+        global dice
+        rolls = []
+        for i in range(dice):
+            rolls.append(randint(1,6))
+        for i in range(dice - 3):
             min_value = min(rolls)
             min_index = rolls.index(min_value)
             del rolls[min_index]
@@ -240,17 +263,23 @@ def main():
             .format(new_character.attributes['charisma'].value,charisma_bonus)
     print "|     +--+  +-----------------------+ Magic |  |                   |".format()
     print "| Languages:_________________________ Staff +--|-- Magic Items ----|".format()
-    print "| Cleric or Thief Skills:                      |                   |".format()
-    print "|                                              |                   |".format()
-    print "|                                              |                   |".format()
-    print "|                                              |                   |".format()
     print "+-To Hit AC------------------------------------|                   |".format()
     print "|  9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 | -1  |                   |".format()
     print "+----------------------------------------------|                   |".format()
     print "|    |   |   |   |   |   |   |   |   |   |     |                   |".format()
     print "+----+---+---+---+---+---+---+---+---+---+-----|-- Other ----------|".format()
-    print "| Notes                                        |                   |".format()
+    if character_class in ('thief','cleric'):
+        print "|-- {:-<43}|                   |".format(character_class.title()+" Skills ")
+    else:
+        print "|-- Notes -------------------------------------|                   |".format()
     print "|                                              |                   |".format()
+    print "|                                              |                   |".format()
+    print "|                                              |                   |".format()
+    print "|                                              |                   |".format()
+    if character_class in ('wizard','cleric'):
+        print "|-- Spells ------------------------------------|                   |".format()
+    else:
+        print "|-- Notes ------------------------------------|                   |".format()
     print "|                                              |                   |".format()
     print "|                                              |                   |".format()
     print "|                                              |                   |".format()
