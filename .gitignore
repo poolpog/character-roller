@@ -1,3 +1,4 @@
 git_ssh_command.sh
 .*.swp
 .swp
+__pycache__
