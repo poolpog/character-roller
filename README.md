@@ -10,3 +10,7 @@ Simple python utilities to roll dand characters so I can practice Python
     * to hit ac table
     * starting gold
     * starting HP
+
+# More to do
+    * Use **5e** character attributes and bonuses
+    * Print format to match the layout of the 5e character sheet ()
