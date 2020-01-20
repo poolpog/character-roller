@@ -1,4 +1,6 @@
-from character import cfg
+from random import *
+
+from character.cfg import Cfg
 
 class Attribute():
     value = 0
@@ -10,16 +12,16 @@ class Attribute():
         'con': '{:>+2d} HP',
         'cha': '{:>+2d} NPC react'
     }
-    dice = cfg.dice
 
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         self.roll()
 
     def roll(self):
         rolls = []
-        for i in range(dice):
+        for i in range(self.config.dice):
             rolls.append(randint(1,6))
-        for i in range(dice - 3):
+        for i in range(self.config.dice - 3):
             min_value = min(rolls)
             min_index = rolls.index(min_value)
             del rolls[min_index]

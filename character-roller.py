@@ -1,72 +1,17 @@
 #!/usr/bin/env python3
 
 from random import *
-import argparse
 
-from character import character
-from character import cfg
+from character.character import Character
+from character.cfg import Cfg
 
 # == Init == #
-parser = argparse.ArgumentParser()
-parser.add_argument("-c", "--class",
-                        help="Character class. One of: fighter, thief, wizard, cleric. Defaults to 'fighter'",
-                        action="store",
-                        default="fighter",
-                        dest="character_class"
-                        )
-parser.add_argument("-m", "--min-attribute-value",
-                        help="Minimum primary attribute value for character class. Defaults to '15'",
-                        action="store",
-                        type=int,
-                        default=15,
-                        dest="min_attribute_value"
-                        )
-parser.add_argument("-2", "--2up",
-                        help="Format for 2 per page, landscape",
-                        action="store_true",
-                        default=False,
-                        dest="_2up"
-                        )
-parser.add_argument("-r", "--random",
-                        help="Roll a random class",
-                        action="store_true",
-                        default=False,
-                        dest="random_class"
-                        )
-parser.add_argument("-d", "--dice",
-                        help="Number of dice to roll to get stats; will pick best 3",
-                        action="store",
-                        default=4,
-                        type=int,
-                        dest="dice"
-                        )
-args = parser.parse_args()
-cfg.character_class = args.character_class
-cfg.min_attribute_value = args.min_attribute_value
-cfg._2up = args._2up
-cfg.random_class = args.random_class
-cfg.dice = args.dice if args.dice >= 3 else 3
+config = Cfg()
 
-allowed_classes = cfg.allowed_classes
-character_class = cfg.character_class
-min_attribute_value = cfg.min_attribute_value
-_2up = cfg._2up
-random_class = cfg.random_class
-dice = cfg.dice
-
-if character_class not in allowed_classes:
-    args = parser.parse_args(['-h'])
-    exit()
-
-if random_class:
-    from random import *
-    pick = randint( 0, 3 )
-    character_class = allowed_classes[pick]
 # == End Init == #
 
 def main():
-    new_character = character.Character(character_class)
-    print(f"{new_character}")
+    new_character = Character(config)
 
     str_bonus = ""
     int_bonus = ""
@@ -128,7 +73,7 @@ def main():
     print("| Attribs   Modifiers                 Throws   |                   |".format())
     print("|     +--+  +-----------------------+ Poison+--|-- Weapons/Armor --|".format())
     print("| STR:|{:>2}|  |{:<23}| Death |  |                   |".format(new_character.attributes['str'].value,str_bonus))
-    print("|     +--+  +-----------------------+ Ray   +--|                  |".format())
+    print("|     +--+  +-----------------------+ Ray   +--|                   |".format())
     print("|     +--+  +-----------------------+          |                   |".format())
     print("| INT:|{:>2}|  |{:23}| Magic +--|                   |".format(new_character.attributes['int'].value,int_bonus))
     print("|     +--+  +-----------------------+ Wand  |  |                   |".format())
@@ -150,17 +95,17 @@ def main():
     print("+----------------------------------------------|                   |".format())
     print("|    |   |   |   |   |   |   |   |   |   |     |                   |".format())
     print("+----+---+---+---+---+---+---+---+---+---+-----|-- Other ----------|".format())
-    if character_class in ('thief','cleric'):
-        print("|-- {:-<43}|                   |".format(character_class.title()+" Skills "))
+    if new_character.character_class in ['thief','cleric']:
+        print("|-- {:-<43}|                   |".format(new_character.character_class.title()+" Skills "))
     else:
         print("|-- Notes -------------------------------------|                   |".format())
     print("|                                              |                   |".format())
     print("|                                              |                   |".format())
     print("|                                              |                   |".format())
     print("|                                              |                   |".format())
-    if character_class in ('wizard','cleric'):
+    if new_character.character_class in ['wizard','cleric']:
         print("|-- Spells ------------------------------------|                   |".format())
-    elif character_class in ('thief'):
+    elif new_character.character_class in ['thief']:
         print("|-- Notes -------------------------------------|                   |".format())
     else:
         print("|                                              |                   |".format())
@@ -168,7 +113,7 @@ def main():
     print("|                                              |                   |".format())
     print("|                                              |                   |".format())
     print("|                                              |                   |".format())
-    if _2up:
+    if new_character.config._2up:
         print("|                                              |                   |".format())
         print("|                                              |                   |".format())
         print("|                                              |                   |".format())

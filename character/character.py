@@ -1,14 +1,13 @@
 from character.attribute import Attribute
 from character.character_class import CharacterClass
 from character.hitpoints import HitPoints
-from character import cfg
+
+from character.cfg import Cfg
 
 class Character():
     attributes = ""
-    dice = cfg.dice
-    min_attribute_value = cfg.min_attribute_value
 
-    def __init__(self, character_class = ""):
+    def __init__(self, config):
         self.attributes = {
             'str':3,
             'int':3,
@@ -18,16 +17,17 @@ class Character():
             'cha':3
             }
 
-        self.character_class = CharacterClass(character_class)
-        primary_attributes = self.character_class.primary_attribute_map[character_class]
+        self.config = config
+        self.character_class = CharacterClass(config)
+        primary_attributes = self.character_class.primary_attribute_map[config.character_class]
 
-        self.attributes['str']  =  Attribute(dice)
-        self.attributes['int']  =  Attribute(dice)
-        self.attributes['wis']  =  Attribute(dice)
-        self.attributes['dex']  =  Attribute(dice)
-        self.attributes['con']  =  Attribute(dice)
-        self.attributes['cha']  =  Attribute(dice)
+        self.attributes['str']  =  Attribute(config)
+        self.attributes['int']  =  Attribute(config)
+        self.attributes['wis']  =  Attribute(config)
+        self.attributes['dex']  =  Attribute(config)
+        self.attributes['con']  =  Attribute(config)
+        self.attributes['cha']  =  Attribute(config)
 
         for attribute in primary_attributes:
-            while self.attributes[attribute].value < min_attribute_value:
-                self.attributes[attribute] = Attribute(dice)
+            while self.attributes[attribute].value < config.min_primary_attr:
+                self.attributes[attribute] = Attribute(config)

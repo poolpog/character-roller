@@ -1,3 +1,5 @@
+from character.cfg import Cfg
+
 class CharacterClass():
     name = ""
     primary_attribute_map = {
@@ -10,8 +12,9 @@ class CharacterClass():
         'halfling':  ['str','dex']
     }
 
-    def __init__(self,name):
-        self.name = name
+    def __init__(self,config):
+        self.config = config
+        self.name = config.character_class
 
     def get_primary_attributes():
         return primary_attribute_map[name]

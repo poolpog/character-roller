@@ -1,3 +1,5 @@
+from character.cfg import Cfg
+
 class HitPoints():
     value = 1
     d_dict = {
