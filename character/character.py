@@ -19,6 +19,8 @@ class Character():
 
         self.config = config
         self.character_class = CharacterClass(config)
+        self.hit_points = HitPoints(config)
+        self.bonus_modified = {}
         primary_attributes = self.character_class.primary_attribute_map[config.character_class]
 
         self.attributes['str']  =  Attribute(config)
@@ -27,6 +29,8 @@ class Character():
         self.attributes['dex']  =  Attribute(config)
         self.attributes['con']  =  Attribute(config)
         self.attributes['cha']  =  Attribute(config)
+        
+        self.bonus_modified['hp'] = self.hit_points.value + ( self.config.level * self.attributes['con'].skill_bonus() )
 
         for attribute in primary_attributes:
             while self.attributes[attribute].value < config.min_primary_attr:

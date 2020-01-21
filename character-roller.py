@@ -67,7 +67,7 @@ def main():
     print("|                                |             |                   |".format())
     print("| LVL:________ AC:______ Sex:____|OTHER:       |                   |".format())
     print("|                                |             |                   |".format())
-    print("| HP:______ XP:______ Dmg:_______|____________ |                   |".format())
+    print("| HP:{:>2}  XP:______ Dmg:_______|____________ |                   |".format(new_character.bonus_modified['hp']))
     print("|                                              |                   |".format())
     print("|                                     Saving   |                   |".format())
     print("| Attribs   Modifiers                 Throws   |                   |".format())
