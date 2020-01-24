@@ -65,6 +65,7 @@ class Cfg():
         self.random_class = args.random_class
         self.level = args.level
         self.dice = args.dice if args.dice >= 3 else 3
+        self.edition = args.edition
 
         if args.character_class not in self.allowed_classes:
             args = parser.parse_args(['-h'])
@@ -73,4 +74,8 @@ class Cfg():
         if args.random_class:
             pick = randint(0, 3)
             self.character_class = self.allowed_classes[pick]
+
+        print(self.character_class)
+        print(self.edition)
+        print(self.dice)
 

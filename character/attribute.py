@@ -2,7 +2,61 @@ from random import *
 
 from character.cfg import Cfg
 
+# Implementation
 class Attribute():
+    value = 0
+    name = ""
+    bonus_strings = {
+        'str': '',
+        'int': '',
+        'wis': '',
+        'dex': '',
+        'con': '',
+        'cha': '',
+    }
+
+    def __init__(self, config):
+        self.config = config
+
+    def roll(self):
+        rolls = []
+        for i in range(self.config.dice):
+            rolls.append(randint(1,6))
+        for i in range(self.config.dice - 3):
+            min_value = min(rolls)
+            min_index = rolls.index(min_value)
+            del rolls[min_index]
+        self.value = sum(rolls)
+
+
+    def skill_bonus(self):
+        return 0
+
+    def xp_bonus(self):
+        return 0
+
+# 
+class Attribute5e(Attribute):
+    bonus_strings = {
+        'str': '{:>+2d}',
+        'int': '{:>+2d}',
+        'wis': '{:>+2d}',
+        'dex': '{:>+2d}',
+        'con': '{:>+2d}',
+        'cha': '{:>+2d}'
+    }
+
+    def __init__(self, config):
+        self.config = config
+        self.roll()
+
+    def skill_bonus(self):
+        return (self.value-10)//2
+
+    def xp_bonus(self):
+        return self.skill_bonus()
+
+class AttributeBasic(Attribute):
     value = 0
     bonus_strings = {
         'str': '{:>+2d} melee,{:>+2d} dmg,{:>+3.0f}% xp',
@@ -28,31 +82,9 @@ class Attribute():
         self.value = sum(rolls)
 
     def skill_bonus(self):
-        out = 0
-        if self.value > 1 and self.value <= 3:
-            out = -3
-        elif self.value >= 4 and self.value <= 5:
-            out = -2
-        elif self.value >= 6 and self.value <= 8:
-            out = -1
-        elif self.value >= 9 and self.value <= 12:
-            out = 0
-        elif self.value >= 13 and self.value <= 15:
-            out = +1
-        elif self.value >= 16 and self.value <= 17:
-            out = +2
-        elif self.value == 18:
-            out = +3
-        return out
+        bonus=(-4,-3,-3,-3,-2,-2,-1,-1,-1,0,0,0,0,1,1,1,2,2,3)
+        return bonus[self.value]
 
     def xp_bonus(self):
-        out = 0
-        if self.value > 1 and self.value <= 5:
-            out = -.2
-        elif self.value >= 6 and self.value <= 8:
-            out = -.1
-        elif self.value >= 13 and self.value <= 15:
-            out = +.05
-        elif self.value >= 16 and self.value <= 18:
-            out = +.10
-        return out
+        bonus = (-4,-.2,-.2,-.2,-.2,-.2,-.1,-.1,-.1,0,0,0,0,.05,.05,.05,.1,.1,.1)
+        return bonus[self.value]

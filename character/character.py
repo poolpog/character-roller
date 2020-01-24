@@ -1,4 +1,4 @@
-from character.attribute import Attribute
+from character.attribute import Attribute, Attribute5e, AttributeBasic
 from character.character_class import CharacterClass
 from character.hitpoints import HitPoints
 
@@ -23,15 +23,23 @@ class Character():
         self.bonus_modified = {}
         primary_attributes = self.character_class.primary_attribute_map[config.character_class]
 
-        self.attributes['str']  =  Attribute(config)
-        self.attributes['int']  =  Attribute(config)
-        self.attributes['wis']  =  Attribute(config)
-        self.attributes['dex']  =  Attribute(config)
-        self.attributes['con']  =  Attribute(config)
-        self.attributes['cha']  =  Attribute(config)
+        if self.config.edition == "5e":
+            self.attributes['str']  =  Attribute5e(config)
+            self.attributes['int']  =  Attribute5e(config)
+            self.attributes['wis']  =  Attribute5e(config)
+            self.attributes['dex']  =  Attribute5e(config)
+            self.attributes['con']  =  Attribute5e(config)
+            self.attributes['cha']  =  Attribute5e(config)
+        else:
+            self.attributes['str']  =  AttributeBasic(config)
+            self.attributes['int']  =  AttributeBasic(config)
+            self.attributes['wis']  =  AttributeBasic(config)
+            self.attributes['dex']  =  AttributeBasic(config)
+            self.attributes['con']  =  AttributeBasic(config)
+            self.attributes['cha']  =  AttributeBasic(config)
         
         self.bonus_modified['hp'] = self.hit_points.value + ( self.config.level * self.attributes['con'].skill_bonus() )
 
         for attribute in primary_attributes:
             while self.attributes[attribute].value < config.min_primary_attr:
-                self.attributes[attribute] = Attribute(config)
+                self.attributes[attribute].roll()
