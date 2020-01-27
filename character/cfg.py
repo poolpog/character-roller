@@ -1,13 +1,28 @@
 import argparse
 
 class Cfg():
-    _2up = False
     random_class = False
     dice = 4
     edition = "5e"
     character_class = "fighter"
     min_primary_attr = 15
-    allowed_classes = ("fighter", "thief", "wizard", "cleric")
+    allowed_classes = {
+        '5e': ("barbarian",
+                "bard",
+                "cleric",
+                "druid",
+                "fighter",
+                "monk",
+                "paladin",
+                "ranger",
+                "rogue",
+                "sorcerer",
+                "thief",
+                "warlock",
+                "wizard"
+        ),
+        'basic': ("fighter", "thief", "wizard", "cleric")
+    }
     allowed_editions = ("5e", "basic")
 
     def __init__(self):
@@ -24,12 +39,6 @@ class Cfg():
                                 type=int,
                                 default=15,
                                 dest="min_primary_attr"
-                                )
-        parser.add_argument("-2", "--2up",
-                                help="Format for 2 per page, landscape",
-                                action="store_true",
-                                default=False,
-                                dest="_2up"
                                 )
         parser.add_argument("-r", "--random",
                                 help="Roll a random class",
@@ -61,13 +70,12 @@ class Cfg():
 
         self.character_class = args.character_class
         self.min_primary_attr = args.min_primary_attr
-        self._2up = args._2up
         self.random_class = args.random_class
         self.level = args.level
         self.dice = args.dice if args.dice >= 3 else 3
         self.edition = args.edition
 
-        if args.character_class not in self.allowed_classes:
+        if args.character_class not in self.allowed_classes[self.edition]:
             args = parser.parse_args(['-h'])
             exit()
 

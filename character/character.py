@@ -1,6 +1,6 @@
 from character.attribute import Attribute, Attribute5e, AttributeBasic
 from character.character_class import CharacterClass
-from character.hitpoints import HitPoints
+from character.hitpoints import HitPoints, HitPoints5e, HitPointsBasic
 
 from character.cfg import Cfg
 
@@ -21,7 +21,8 @@ class Character():
         self.character_class = CharacterClass(config)
         self.hit_points = HitPoints(config)
         self.bonus_modified = {}
-        primary_attributes = self.character_class.primary_attribute_map[config.character_class]
+        self.prof_bonus = ( self.config.level * 2 )
+        primary_attributes = self.character_class.primary_attributes[config.character_class]
 
         if self.config.edition == "5e":
             self.attributes['str']  =  Attribute5e(config)

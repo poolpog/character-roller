@@ -6,7 +6,24 @@ class HitPoints():
     def __init__(self, config):
         self.config = config
         self.value = 0
-        self.d_dict = {'5e': {
+        self.d_dict = {
+                'fighter': 8,
+                'thief': 4,
+                'magicuser': 4,
+                'cleric': 6
+            }
+        self.roll()
+
+    def roll(self):
+        rolls = []
+        for i in range(self.config.level):
+            rolls.append(randint(1,self.d_dict[self.config.character_class]))
+        self.value = sum(rolls)
+
+class HitPoints5e():
+    def __init__(self, config):
+        self.value = 0
+        self.d_dict = {
                 'barbarian': 12,
                 'bard': 8,
                 'cleric': 8,
@@ -20,7 +37,14 @@ class HitPoints():
                 'thief': 8,
                 'warlock': 8,
                 'wizard': 6,
-            }, 'basic': {
+            }
+        self.roll()
+
+class HitPointsBasic():
+    def __init__(self, config):
+        self.config = config
+        self.value = 0
+        self.d_dict = {
                 'fighter': 8,
                 'thief': 4,
                 'magicuser': 4,
@@ -29,13 +53,5 @@ class HitPoints():
                 'dwarf': 8,
                 'halfling': 6,
                 'mystic': 6,
-            } }
-
+            }
         self.roll()
-
-    def roll(self):
-        rolls = []
-        for i in range(self.config.level):
-            rolls.append(randint(1,self.d_dict[self.config.edition][self.config.character_class]))
-        self.value = sum(rolls)
-
