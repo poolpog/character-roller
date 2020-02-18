@@ -113,10 +113,6 @@ def main():
     print("|                                              |                   |".format())
     print("|                                              |                   |".format())
     print("|                                              |                   |".format())
-    if new_character.config._2up:
-        print("|                                              |                   |".format())
-        print("|                                              |                   |".format())
-        print("|                                              |                   |".format())
     print("+==================================================================+".format())
 
 ##################################
