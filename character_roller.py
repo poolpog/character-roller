@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+# TODO
+#   * use json as default output format
+#   * use json output to populate different other output formats
+#   * add OutputFormat as a class?
+#   * update to use D&D 5e rules for character gen
+
 from __future__ import print_function
 
 from random import *
