@@ -19,17 +19,17 @@ parser.add_argument("-m", "--min-attribute-value",
                         default=15,
                         dest="min_attribute_value"
                         )
-parser.add_argument("-2", "--2up",
-                        help="Format for 2 per page, landscape",
-                        action="store_true",
-                        default=False,
-                        dest="_2up"
-                        )
 parser.add_argument("-r", "--random",
                         help="Roll a random class",
                         action="store_true",
                         default=False,
                         dest="random_class"
+                        )
+parser.add_argument("-f", "--output_format",
+                        help="Output format",
+                        action="store",
+                        default="text",
+                        dest="output_format"
                         )
 parser.add_argument("-d", "--dice",
                         help="Number of dice to roll to get stats; will pick best 3",
@@ -40,15 +40,19 @@ parser.add_argument("-d", "--dice",
                         )
 args = parser.parse_args()  
 character_class = args.character_class
+output_format = args.output_format
 min_attribute_value = args.min_attribute_value
-_2up = args._2up
 random_class = args.random_class
 dice = args.dice if args.dice >= 3 else 3
 allowed_classes = ( "fighter", "thief", "wizard", "cleric" )
+allowed_output_formats = ( "text", "json", "html" )
 
 if character_class not in allowed_classes:
     args = parser.parse_args(['-h'])  
     exit()
+
+if output_format not in allowed_output_formats:
+    output_format = "text"
 
 if random_class:
     from random import *
@@ -177,7 +181,7 @@ class HitPoints():
     }
 
 
-def main():
+def main(output_format=output_format):
     new_character = Character(character_class)
 
     strength_bonus = ""
@@ -222,77 +226,89 @@ def main():
             new_character.attributes['charisma'].skill_bonus()
             )
 
-    print("+==================================================================+".format())
-    print("|                                |   Money     |      Sketch       |".format())
-    print("| Name:__________________________|             |                   |".format())
-    print("|                                |             |                   |".format())
-    print("| Player:________________________|PP:___GP:___ |                   |".format())
-    print("|                                |             |                   |".format())
-    print("| Class: {:<23} |EP:___SP:___ |                   |"\
-            .format(new_character.character_class.name.upper()))
-    print("|                                |             |                   |".format())
-    print("| Alignment:_____________________|CP:___       |                   |".format())
-    print("|                                |             |                   |".format())
-    print("| LVL:________ AC:______ Sex:____|OTHER:       |                   |".format())
-    print("|                                |             |                   |".format())
-    print("| HP:______ XP:______ Dmg:_______|____________ |                   |".format())
-    print("|                                              |                   |".format())
-    print("|                                     Saving   |                   |".format())
-    print("| Attribs   Modifiers                 Throws   |                   |".format())
-    print("|     +--+  +-----------------------+ Poison+--|-- Weapons/Armor --|".format())
-    print("| STR:|{:>2}|  |{:<23}| Death |  |                   |"\
-            .format(new_character.attributes['strength'].value,strength_bonus))
-    print("|     +--+  +-----------------------+ Ray   +--|                   |".format())
-    print("|     +--+  +-----------------------+          |                   |".format())
-    print("| INT:|{:>2}|  |{:23}| Magic +--|                   |"\
-            .format(new_character.attributes['intelligence'].value,intelligence_bonus))
-    print("|     +--+  +-----------------------+ Wand  |  |                   |".format())
-    print("|     +--+  +-----------------------+       +--|                   |".format())
-    print("| WIS:|{:>2}|  |{:23}|          |                   |"\
-            .format(new_character.attributes['wisdom'].value,wisdom_bonus))
-    print("|     +--+  +-----------------------+ Stone/+--|                   |".format())
-    print("|     +--+  +-----------------------+ Paral-|  |-- Normal Items ---|".format())
-    print("| DEX:|{:>2}|  |{:23}| ysis  +--|                   |"\
-            .format(new_character.attributes['dexterity'].value,dexterity_bonus))
-    print("|     +--+  +-----------------------+          |                   |".format())
-    print("|     +--+  +-----------------------+ Dragon+--|                   |".format())
-    print("| CON:|{:>2}|  |{:23}| Breath|  |                   |"\
-            .format(new_character.attributes['constitution'].value,constitution_bonus))
-    print("|     +--+  +-----------------------+       +--|                   |".format())
-    print("|     +--+  +-----------------------+          |                   |".format())
-    print("| CHA:|{:>2}|  |{:23}| Spell +--|                   |"\
-            .format(new_character.attributes['charisma'].value,charisma_bonus))
-    print("|     +--+  +-----------------------+ Magic |  |                   |".format())
-    print("| Languages:_________________________ Staff +--|-- Magic Items ----|".format())
-    print("+-To Hit AC------------------------------------|                   |".format())
-    print("|  9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 | -1  |                   |".format())
-    print("+----------------------------------------------|                   |".format())
-    print("|    |   |   |   |   |   |   |   |   |   |     |                   |".format())
-    print("+----+---+---+---+---+---+---+---+---+---+-----|-- Other ----------|".format())
-    if character_class in ('thief','cleric'):
-        print("|-- {:-<43}|                   |".format(character_class.title()+" Skills "))
-    else:
-        print("|-- Notes -------------------------------------|                   |".format())
-    print("|                                              |                   |".format())
-    print("|                                              |                   |".format())
-    print("|                                              |                   |".format())
-    print("|                                              |                   |".format())
-    if character_class in ('wizard','cleric'):
-        print("|-- Spells ------------------------------------|                   |".format())
-    elif character_class in ('thief'):
-        print("|-- Notes -------------------------------------|                   |".format())
-    else:
-        print("|                                              |                   |".format())
-    print("|                                              |                   |".format())
-    print("|                                              |                   |".format())
-    print("|                                              |                   |".format())
-    print("|                                              |                   |".format())
-    if _2up:
-        print("|                                              |                   |".format())
-        print("|                                              |                   |".format())
-        print("|                                              |                   |".format())
-    print("+==================================================================+".format())
+    output = ""
+    if output_format == "text":
+        output += "+==================================================================+\n".format()
+        output += "|                                |   Money     |      Sketch       |\n".format()
+        output += "| Name:__________________________|             |                   |\n".format()
+        output += "|                                |             |                   |\n".format()
+        output += "| Player:________________________|PP:___GP:___ |                   |\n".format()
+        output += "|                                |             |                   |\n".format()
+        output += "| Class: {:<23} |EP:___SP:___ |                   |\n"\
+                .format(new_character.character_class.name.upper())
+        output += "|                                |             |                   |\n".format()
+        output += "| Alignment:_____________________|CP:___       |                   |\n".format()
+        output += "|                                |             |                   |\n".format()
+        output += "| LVL:________ AC:______ Sex:____|OTHER:       |                   |\n".format()
+        output += "|                                |             |                   |\n".format()
+        output += "| HP:______ XP:______ Dmg:_______|____________ |                   |\n".format()
+        output += "|                                              |                   |\n".format()
+        output += "|                                     Saving   |                   |\n".format()
+        output += "| Attribs   Modifiers                 Throws   |                   |\n".format()
+        output += "|     +--+  +-----------------------+ Poison+--|-- Weapons/Armor --|\n".format()
+        output += "| STR:|{:>2}|  |{:<23}| Death |  |                   |\n"\
+                .format(new_character.attributes['strength'].value,strength_bonus)
+        output += "|     +--+  +-----------------------+ Ray   +--|                   |\n".format()
+        output += "|     +--+  +-----------------------+          |                   |\n".format()
+        output += "| INT:|{:>2}|  |{:23}| Magic +--|                   |\n"\
+                .format(new_character.attributes['intelligence'].value,intelligence_bonus)
+        output += "|     +--+  +-----------------------+ Wand  |  |                   |\n".format()
+        output += "|     +--+  +-----------------------+       +--|                   |\n".format()
+        output += "| WIS:|{:>2}|  |{:23}|          |                   |\n"\
+                .format(new_character.attributes['wisdom'].value,wisdom_bonus)
+        output += "|     +--+  +-----------------------+ Stone/+--|                   |\n".format()
+        output += "|     +--+  +-----------------------+ Paral-|  |-- Normal Items ---|\n".format()
+        output += "| DEX:|{:>2}|  |{:23}| ysis  +--|                   |\n"\
+                .format(new_character.attributes['dexterity'].value,dexterity_bonus)
+        output += "|     +--+  +-----------------------+          |                   |\n".format()
+        output += "|     +--+  +-----------------------+ Dragon+--|                   |\n".format()
+        output += "| CON:|{:>2}|  |{:23}| Breath|  |                   |\n"\
+                .format(new_character.attributes['constitution'].value,constitution_bonus)
+        output += "|     +--+  +-----------------------+       +--|                   |\n".format()
+        output += "|     +--+  +-----------------------+          |                   |\n".format()
+        output += "| CHA:|{:>2}|  |{:23}| Spell +--|                   |\n"\
+                .format(new_character.attributes['charisma'].value,charisma_bonus)
+        output += "|     +--+  +-----------------------+ Magic |  |                   |\n".format()
+        output += "| Languages:_________________________ Staff +--|-- Magic Items ----|\n".format()
+        output += "+-To Hit AC------------------------------------|                   |\n".format()
+        output += "|  9 | 8 | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 | -1  |                   |\n".format()
+        output += "+----------------------------------------------|                   |\n".format()
+        output += "|    |   |   |   |   |   |   |   |   |   |     |                   |\n".format()
+        output += "+----+---+---+---+---+---+---+---+---+---+-----|-- Other ----------|\n".format()
+        if character_class in ('thief','cleric'):
+            output += "|-- {:-<43}|                   |\n".format(character_class.title()+" Skills ")
+        else:
+            output += "|-- Notes -------------------------------------|                   |\n".format()
+        output += "|                                              |                   |\n".format()
+        output += "|                                              |                   |\n".format()
+        output += "|                                              |                   |\n".format()
+        output += "|                                              |                   |\n".format()
+        if character_class in ('wizard','cleric'):
+            output += "|-- Spells ------------------------------------|                   |\n".format()
+        elif character_class in ('thief'):
+            output += "|-- Notes -------------------------------------|                   |\n".format()
+        else:
+            output += "|                                              |                   |\n".format()
+        output += "|                                              |                   |\n".format()
+        output += "|                                              |                   |\n".format()
+        output += "|                                              |                   |\n".format()
+        output += "|                                              |                   |\n".format()
+        output += "+==================================================================+\n".format()
+
+    elif output_format == "json":
+        output = '{'
+        output += '"class": "{}",'.format(new_character.character_class.name.upper())
+        output += '"str": "{}", "str_bonus": "{}",'.format(new_character.attributes['strength'].value,strength_bonus)
+        output += '"int": "{}", "int_bonus": "{}",'.format(new_character.attributes['intelligence'].value,intelligence_bonus)
+        output += '"wis": "{}", "wis_bonus": "{}",'.format(new_character.attributes['wisdom'].value,wisdom_bonus)
+        output += '"dex": "{}", "dex_bonus": "{}",'.format(new_character.attributes['dexterity'].value,dexterity_bonus)
+        output += '"con": "{}", "con_bonus": "{}",'.format(new_character.attributes['constitution'].value,constitution_bonus)
+        output += '"cha": "{}", "cha_bonus": "{}"'.format(new_character.attributes['charisma'].value,charisma_bonus)
+        output += '}\n'
+    
+    return output
 
 ##################################
 if __name__ == "__main__":
-    main()
+    output = main()
+    print(output)
