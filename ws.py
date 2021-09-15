@@ -6,15 +6,21 @@
 ##############################################################
 
 import cherrypy
-import character_roller
+from character_roller import CharacterRoller
 
 cherrypy.config.update({'server.socket_host': '0.0.0.0',
                         'server.socket_port': 8080,
                                                })
 
 class WS(object):
+    def GET(self, *args, **kwargs):
+        for key in kwargs.keys():
+            self.settings[key] = kwargs[key]
+
     @cherrypy.expose
-    def index(self):
-        return character_roller.main(output_format="json")
+    def index(self, **kwargs):
+        settings = dict([ i for i in cherrypy.request.params.items() ])
+        cr = CharacterRoller(settings=settings)
+        return cr.main()
 
 cherrypy.quickstart(WS())
