@@ -6,10 +6,14 @@
 ##############################################################
 
 import cherrypy
+import os
 from character_roller import CharacterRoller
 
+# PORT
+SOCKET_PORT = int(os.environ['SOCKET_PORT']) if 'SOCKET_PORT' in os.environ else 8080
+
 cherrypy.config.update({'server.socket_host': '0.0.0.0',
-                        'server.socket_port': 8080,
+                        'server.socket_port': SOCKET_PORT,
                                                })
 
 class WS(object):
